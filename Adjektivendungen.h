@@ -18,9 +18,13 @@
 
 class Adjektivendungen {
 public:
+    // reads in sentence with adjectives which need to be modified
     std::vector<std::string> get_sentence();
-    std::string get_adjective();
-    std::vector<std::string> get_noun_information();
-    std::string get_ending();
+    // gets adjective to be modified
+    void get_adjective(std::vector<int> &adjectives, int sent_length);
+    // gets case and gender of noun, finds out whether there is a determiner
+    std::vector<int> get_noun_information();
+    // modifies adjective
+    std::string get_ending(std::vector<int> &info);
     
 };

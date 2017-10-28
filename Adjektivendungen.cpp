@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <cassert>
 using namespace std;
 
 vector<string> Adjektivendungen::get_sentence() {
@@ -19,14 +20,15 @@ vector<string> Adjektivendungen::get_sentence() {
     cout << "First, enter your sentence (do not put a space after the last word, and do not press the delete key): ";
     getline(cin, sentence);
     
+    // calculates number of words in sentence
     for (int ind = 0; ind < sentence.length(); ind++) {
         if (sentence.at(ind) == ' ') {
             num_words++;
         }
     }
     
+    // breaks sentence into individual components
     istringstream sentence_stream(sentence);
-    
     string word;
     for (int count = 0; count < num_words; count++) {
         sentence_stream >> word;
@@ -36,69 +38,71 @@ vector<string> Adjektivendungen::get_sentence() {
     return sentence_components;
 }
 
-string Adjektivendungen::get_adjective() {
-    string adjective;
-    
-    cout << "\nNow, enter the adjective you wish to find the correct ending for: ";
-    cin >> adjective;
-    return adjective;
+void Adjektivendungen::get_adjective(vector<int> &adjectives, int sent_length) {
+    int adj_index = 0;
+    cout << "\nNow, enter the number of  adjectives you wish to modify: ";
+    int num_adj = 0;
+    cin >> num_adj;
+    cout << "\nNow, enter the positions of the adjectives you wish to find the correct endings for (using 0-indexing): ";
+    for (int ind = 0; ind < num_adj; ind++) {
+        cin >> adj_index;
+        assert(adj_index <= sent_length - 1);
+        adjectives.push_back(adj_index);
+    }
 }
 
-vector<string> Adjektivendungen::get_noun_information() {
-    vector<string> noun_info;
-    string determiner, gender, n_case;
+vector<int> Adjektivendungen::get_noun_information() {
+    vector<int> noun_info;
+    int determiner, gender, n_case;
     
-    cout << "\nIs a determiner present? (Yes or No): ";
+    // checks for presence of der, das, die, etc
+    cout << "\nIs a determiner present? (1 is Yes and 0 is No): ";
     cin >> determiner;
     noun_info.push_back(determiner);
     
-    cout << "\nNoun gender (Fem for feminine, Mas for masculine, Neu for neutral, Plu for plural): ";
+    // gender of noun will influence its ending
+    cout << "\nNoun gender (1 for feminine, 2 for masculine, 3 for neutral, 4 for plural): ";
     cin >> gender;
     noun_info.push_back(gender);
     
-    cout << "\nNoun case (Nom for nominative, Akk for accusative, Dat for dative, Gen for genitive): ";
+    // case of noun will influence its ending
+    cout << "\nNoun case (1 for nominative, 2 for accusative, 3 for dative, 4 for genitive): ";
     cin >> n_case;
     noun_info.push_back(n_case);
     
     return noun_info;
 }
 
-string Adjektivendungen::get_ending() {
+string Adjektivendungen::get_ending(vector<int> &info) {
+    assert(info.size() == 3);
     string end;
-    vector<string> info = get_noun_information();
+    
+    // uses information from get_noun_information to determine ending
     
     bool determiner_present = 0;
-    if (info.at(0) == "Yes") {
+    if (info[0] == 1) {
         determiner_present = true;
     } else {
         determiner_present = false;
     }
     
-    string given_gender = info.at(1);
+    int given_gender = info[1];
     
-    int given_case = 0;
-    if (info.at(2) == "Nom") {
-        given_case = 1;
-    } else if (info.at(2) == "Akk") {
-        given_case = 2;
-    } else if (info.at(2) == "Dat") {
-        given_case = 3;
-    } else if (info.at(2) == "Gen") {
-        given_case = 4;
-    }
+    int given_case = info[2];
     
+    // clean up efficiency
     switch (given_case) {
         case 1:
             if (determiner_present) {
-                if (given_gender != "Plu") {
+                if (given_gender != 4) {
                     end = "e";
                 } else {
                     end = "en";
                 }
             } else {
-                if (given_gender == "Fem" || given_gender == "Plu") {
+                if (given_gender == 1 || given_gender == 4) {
                     end = "e";
-                } else if (given_gender == "Mas") {
+                } else if (given_gender == 2) {
                     end = "er";
                 } else {
                     end = "es";
@@ -108,15 +112,15 @@ string Adjektivendungen::get_ending() {
             
         case 2:
             if (determiner_present) {
-                if (given_gender == "Fem" || given_gender == "Neu") {
+                if (given_gender == 1 || given_gender == 3) {
                     end = "e";
                 } else {
                     end = "en";
                 }
             } else {
-                if (given_gender == "Fem" || given_gender == "Plu") {
+                if (given_gender == 1 || given_gender == 4) {
                     end = "e";
-                } else if (given_gender == "Mas") {
+                } else if (given_gender == 2) {
                     end = "en";
                 } else {
                     end = "es";
@@ -128,9 +132,9 @@ string Adjektivendungen::get_ending() {
             if (determiner_present) {
                 end = "en";
             } else {
-                if (given_gender == "Mas" || given_gender == "Neu") {
+                if (given_gender == 2 || given_gender == 3) {
                     end = "em";
-                } else if (given_gender == "Fem") {
+                } else if (given_gender == 1) {
                     end = "er";
                 } else {
                     end = "en";
@@ -142,7 +146,7 @@ string Adjektivendungen::get_ending() {
             if (determiner_present) {
                 end = "en";
             } else {
-                if (given_gender == "Fem" || given_gender == "Plu") {
+                if (given_gender == 1 || given_gender == 4) {
                     end = "er";
                 } else {
                     end = "en";
@@ -150,7 +154,6 @@ string Adjektivendungen::get_ending() {
             }
             break;
     }
-    
     return end;
 }
 

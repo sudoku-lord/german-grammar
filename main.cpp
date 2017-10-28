@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <sstream>
+#include <string>
 #include "Adjektivendungen.h"
 using namespace std;
 
@@ -17,21 +18,32 @@ int main(int argc, const char * argv[]) {
     Adjektivendungen adj;
     
     cout << "Wilkommen! This is the Adjective Ending Calculator.\n";
-    vector<string> user_sentence = adj.get_sentence();
-    
-    
-    string user_adjective = adj.get_adjective();
-    string ending = adj.get_ending();
-    
-    cout << "\nHere is your sentence: ";
-
-    for (int word_pos = 0; word_pos < user_sentence.size(); word_pos++) {
-        if (user_sentence.at(word_pos) == user_adjective) {
-            user_sentence.at(word_pos).append(ending);
+    cout << "How many sentences do you want to modify? ";
+    string num_sentences = "";
+    getline(cin, num_sentences);
+    int num_sent = stoi(num_sentences);
+    for (int i = 0; i < num_sent; ++i) {
+        vector<string> user_sentence = adj.get_sentence();
+        vector<int> info = adj.get_noun_information();
+        
+        vector<int> adjectives;
+        adj.get_adjective(adjectives, (int) user_sentence.size());
+        
+        string ending = adj.get_ending(info);
+        
+        cout << "\nHere is your sentence: ";
+        
+        
+        for (int word_pos = 0; word_pos < adjectives.size(); word_pos++) {
+            user_sentence[adjectives[word_pos]] += ending;
         }
-        cout << user_sentence.at(word_pos) << " ";
+        for (int i = 0; i < user_sentence.size(); i++) {
+            cout << user_sentence[i] << " ";
+        }
+        cout << endl;
+        cin.clear();
+        cin.ignore();
     }
-    cout << endl;
     
     return 0;
 }
