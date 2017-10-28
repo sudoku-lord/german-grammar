@@ -7,6 +7,6 @@ are the three aspects of a noun which provide information on what kind of ending
 which may precede it should have. I decided to write this program to make the process of figuring
 out German adjective endings a little easier to understand.
 
-TODO: Add tests
+UPDATE 10/27/17: Added very basic test. Will update with more.
 
-TODO: Comment code for readability
+TODO: Rewrite in Python as web application.
