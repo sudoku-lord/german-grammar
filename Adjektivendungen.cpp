@@ -39,6 +39,7 @@ vector<string> Adjektivendungen::get_sentence() {
 }
 
 void Adjektivendungen::get_adjective(vector<int> &adjectives, int sent_length) {
+    assert(sent_length > 0);
     int adj_index = 0;
     cout << "\nNow, enter the number of  adjectives you wish to modify: ";
     int num_adj = 0;
