@@ -156,4 +156,3 @@ string Adjektivendungen::get_ending(vector<int> &info) {
     }
     return end;
 }
-
