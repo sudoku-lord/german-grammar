@@ -9,4 +9,8 @@ out German adjective endings a little easier to understand.
 
 UPDATE 10/27/17: Added very basic test. Will update with more.
 
+COMPILE AND RUN INSTRUCTIONS:
+g++ main.cpp Adjektivendungen.cpp -o main
+./main < test_file.txt > output.txt
+
 TODO: Rewrite in Python as web application.
